@@ -13,10 +13,22 @@ struct ContentView: View {
     
     var body: some View {
         Text("authorsPhrases")
+            
     }
     private func loadData() {
         guard let url = URL(string: "https://programming-quotes-api.herokuapp.com/quotes/random") else {
             return
+        }
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            guard let data = data else {
+                return
+            }
+            if let decodeData = try? JSONDecoder().decode (QuoteData.self, from: data) {
+                DispatchQueue.main.async {
+                    self.quoteData = decodeData
+                }
+            }
+            
         }
     }
 }
